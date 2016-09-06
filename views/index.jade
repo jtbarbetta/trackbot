@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  p.header Welcome to #{title}
+  p
+    div.demo-container
+        video(id="myVideo", width="400", height="300", preload, autoplay, loop, muted, controls)
+        div.mouth-rect
+  p
+  p.footer
+    a(class="footer", href='https://trackingjs.com/') Based on the examples at tracking.js
+ 
