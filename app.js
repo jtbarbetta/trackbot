@@ -8,8 +8,8 @@ var express = require('express'),
     user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
-    //querystring = require('querystring'),
     request = require('request'),
+    _ = require('underscore'),
     WebSocketServer = require('ws').Server;
 
 var app = express();
@@ -57,21 +57,29 @@ wss = new WebSocketServer({
   server: server
 });
 
-wss.on('connection', function(ws) {
-  ws.on('message', function(message) {
-    var msg = JSON.parse(message);
+var lastColor = "", lastExpression = "";
 
+wss.on('connection', function(ws) {
+  ws.on('message', _.debounce(function() {
+    var message = arguments[0];
+    var msg = JSON.parse(message || {});
     console.log("*******",message);
 
-    // Not really using this now - could be anything really.
     if (msg && msg.color) {
         // do whatever
         console.log(msg.color+" postIt note detected");
-        postToBot("The cat says......you are holding a "+msg.color+" postIt note!  Meow!");
+        if (lastColor !== msg.color) {
+            lastColor = msg.color;
+            postToBot("The cat says......you are holding a "+msg.color+" postIt note!  Meow!");
+        }
     } else if (msg && msg.expression) {
         console.log(msg.expression+" detected");
+        if (lastExpression !== msg.expression) {
+            lastExpression = msg.expression;
+            postToBot("The cat says......you are " + (msg.expression === 'smile' ? "happy" : "sad") + "! Meow!"); 
+        }
     }
-  });
+  }, 100, true));
 });
 
 function postToBot(message) {
@@ -104,23 +112,9 @@ function postToBot(message) {
     console.log("Sending: ",post_data);
     console.log("with opts: ",post_options);
 
-/*
-    var post_req = http.request(post_options, function(res) {
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            console.log('Response: ' + chunk);
-        });
-    });
-
-    post_req.on('error', function(e) {
-        console.log("problem with request: ",e.message);
-    });
-
-    post_req.write(post_data);
-    post_req.end(); 
-*/
     var url = webhook_host+webhook_path;
 
+    /*
     request.post(url, 
         {json: post_data},
         function (error, response, body) {
@@ -129,6 +123,7 @@ function postToBot(message) {
             }
         }
     );
+    */
 }
 
 function handleColor(data) {

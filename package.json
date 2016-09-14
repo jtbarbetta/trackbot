@@ -10,6 +10,7 @@
     "jade": "*",
     "request": "^2.74.0",
     "tracking": "*",
+    "underscore": "^1.8.3",
     "ws": "~1.0"
   }
 }
