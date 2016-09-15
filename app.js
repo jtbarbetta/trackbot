@@ -5,7 +5,8 @@
 
 var express = require('express'),
     routes = require('./routes'),
-    user = require('./routes/user'),
+    color = require('./routes/color'),
+    custom = require('./routes/custom'),
     http = require('http'),
     path = require('path'),
     request = require('request'),
@@ -36,14 +37,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.users);
-//app.get('/word_count', user.word_count);
+app.get('/custom', custom.track);
 
-// REST services for geographical
-//app.get('/geographical/rest/housingAvgs', geographical.housingAvgs);
-
-// web UI for geographical
-//app.get('/geographical/maps', geographical.maps);
+// REST services
+app.get('/color/rest/list', color.list);
 
 var server = http.createServer(app).listen(
   app.get('port'), 
