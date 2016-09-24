@@ -1,9 +1,10 @@
-var CatTracker = function() {
+tracking.CatTracker = function() {
+    tracking.CatTracker.base(this, 'constructor');
 };
 
-CatTracker.prototype.constructor = CatTracker;
+tracking.inherits(tracking.CatTracker, tracking.Tracker);
 
-CatTracker.prototype.track = function(pixels, width, height) {
+tracking.CatTracker.prototype.track = function(pixels, width, height) {
 
     console.log('CatTracker track args: ',arguments);
 
@@ -11,8 +12,6 @@ CatTracker.prototype.track = function(pixels, width, height) {
         // Your results here
     });
 };
-
-tracking.inherits(CatTracker, tracking.Tracker);
 
 window.onload = function() {
     console.log('onload custom tracker');
@@ -32,8 +31,8 @@ window.onload = function() {
 
         // Listen for the tracking events from ColorTracker.
         catTracker.on('track', function(event) {
-            if (event.data.length === 0) {
-                // No colors were detected in this frame.
+            if (!event.data || event.data.length === 0) {
+                // No data detected in this frame.
             } else {
                 event.data.forEach(function(rect) {
                     console.log(rect.x, rect.y, rect.height, rect.width, rect.color);

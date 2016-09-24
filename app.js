@@ -111,7 +111,6 @@ function postToBot(message) {
 
     var url = webhook_host+webhook_path;
 
-    /*
     request.post(url, 
         {json: post_data},
         function (error, response, body) {
@@ -120,7 +119,6 @@ function postToBot(message) {
             }
         }
     );
-    */
 }
 
 function handleColor(data) {
